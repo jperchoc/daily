@@ -3,6 +3,7 @@ import 'react-quill/dist/quill.snow.css';
 import Daily from '../@model/Daily';
 import { debounce } from "lodash";
 import { useEffect, useState } from 'react';
+import './editorStyle.css'
 
 const Editor = (props: {daily: Daily}) => {
   const [content, setContent] = useState('');
@@ -26,15 +27,12 @@ const Editor = (props: {daily: Daily}) => {
     });
   };
   return (
-      <>
-      {JSON.stringify(props.daily)}
     <ReactQuill theme="snow" 
       value={content} 
       onChange={debounce(
         (newVal:string) => handleContentChange(newVal),
         300
       )}/>
-    </>
   );
 }
 
