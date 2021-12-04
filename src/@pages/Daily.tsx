@@ -9,24 +9,10 @@ import Api from '../@api/api';
 const DailyPage = () => {
   const [daily, setDaily] = useState<Daily>(new Daily(-1, new Date(), ''));
 
-  const handleDateChange = useCallback((newDate: Date) => {
+  const handleDateChange = useCallback(async (newDate: Date) => {
     const newDaily = new Daily(-1, newDate, '');
-    Api.getActivityByDate(newDaily.getDateString())
-    .then((dailies: Daily[]) => {
-        if (dailies.length > 0 ) {
-          setDaily(new Daily(
-            dailies[0].id!,
-            new Date(dailies[0].date),
-            dailies[0].content
-            ));
-        } else {
-          Api.postActivity(newDaily.getDateString(), "")
-          .then((data) => {
-            setDaily(new Daily(data.id, new Date(data.date), data.content));
-          });
-        }
-      }
-    );
+    const {id, date, content} = await Api.getActivityByDateOrDefault(newDaily.getDateString());
+    setDaily(new Daily(id, new Date(date), content));
   }, []);
 
   useEffect(() => {

@@ -9,6 +9,15 @@ class Api {
         return await res.json();
     }
 
+    async getActivityByDateOrDefault(date: string) {
+        const dailies = await this.getActivityByDate(date);
+        if (dailies.length > 0) {
+            return dailies[0];
+        } else {
+            return await this.postActivity(date, "");
+        }
+    }
+
     async getActivityByDate(date:string) {
         const res = await fetch(this.url + "/activities?date=" + date);
         return await res.json();

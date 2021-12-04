@@ -8,10 +8,10 @@ const DailyOrder = () => {
     const [users, setUsers] = useState<Person[]>([]);
 
     useEffect(() => {
-        Api.getPersons()
-        .then((data) => {
-            setUsers(data.map((u:Person) => ({...u, hasTalked: false})))
-        });
+        (async function getUsers() {
+            const data = await Api.getPersons();
+            setUsers(data.map((u:Person) => ({...u, hasTalked: false})));
+        })();
     }, [])
 
     const toggleUser = (user: Person) => {
