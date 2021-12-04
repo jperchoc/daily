@@ -1,9 +1,11 @@
+
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Daily from '../@model/Daily';
 import { debounce } from "lodash";
 import { useEffect, useState } from 'react';
 import './editorStyle.css'
+import Api from '../@api/api';
 
 const Editor = (props: {daily: Daily}) => {
   const [content, setContent] = useState('');
@@ -14,17 +16,7 @@ const Editor = (props: {daily: Daily}) => {
 
   const handleContentChange = (newContent:string) => {
     setContent(newContent);
-    fetch("http://localhost:3004/activities/" + props.daily.id, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "PUT",
-      body: JSON.stringify({
-        ...props.daily,
-        content: newContent
-      }),
-    });
+    Api.putActivity(props.daily.id!, props.daily.getDateString(), newContent);
   };
   return (
     <ReactQuill theme="snow" 

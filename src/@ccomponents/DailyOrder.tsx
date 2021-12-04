@@ -1,42 +1,20 @@
 import { Avatar, Checkbox, Col, List, Row, Skeleton } from "antd";
-import { useState } from "react";
-
-interface User {
-    id: number;
-    name: string;
-    hasTalked: boolean;
-}
-function shuffle<T>(array: Array<T>): Array<T> {
-    let currentIndex = array.length, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
-}
+import { useEffect, useState } from "react";
+import { shuffle  } from "lodash";
+import Person from "../@model/Person";
+import Api from "../@api/api";
 
 const DailyOrder = () => {
-    const [users, setUsers] = useState([
-        { id: 1, name: "Raphael", hasTalked: false },
-        { id: 2, name: "Yannick", hasTalked: false },
-        { id: 3, name: "Dimitri", hasTalked: false },
-        { id: 4, name: "Julien", hasTalked: false },
-        { id: 5, name: "Bastien", hasTalked: false },
-        { id: 6, name: "Pierre-Henri", hasTalked: false },
-        { id: 7, name: "Varun", hasTalked: false },
-        { id: 8, name: "Anoop", hasTalked: false },
-    ]);
+    const [users, setUsers] = useState<Person[]>([]);
 
-    const toggleUser = (user: User) => {
+    useEffect(() => {
+        Api.getPersons()
+        .then((data) => {
+            setUsers(data.map((u:Person) => ({...u, hasTalked: false})))
+        });
+    }, [])
+
+    const toggleUser = (user: Person) => {
         user.hasTalked = !user.hasTalked;
         setUsers([
             ...users.filter(u => u.id !== user.id),
@@ -44,6 +22,17 @@ const DailyOrder = () => {
         ]);
 
     }
+
+    const listItem = (item:Person) => 
+        (<button 
+            className="link-button" 
+            onClick={(e) => toggleUser(item)}>
+            <List.Item className="clickable" actions={[<Checkbox checked={item.hasTalked} />]}>
+                <Skeleton avatar title={false} loading={false} active>
+                    <List.Item.Meta avatar={<Avatar src={item.picture} />} title={item.name} />
+                </Skeleton>
+            </List.Item>
+        </button>);
     return (
         <>
             <Row> 
@@ -54,18 +43,7 @@ const DailyOrder = () => {
                         bordered
                         itemLayout="horizontal"
                         dataSource={shuffle(users).filter(u => !u.hasTalked)}
-                        renderItem={item =>
-                            <List.Item
-                                actions={[<Checkbox onChange={() => toggleUser(item)} checked={item.hasTalked} />]}
-                            >
-                                <Skeleton avatar title={false} loading={false} active>
-                                    <List.Item.Meta
-                                        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                                        title={<a href="https://ant.design">{item.name}</a>}
-                                    />
-                                </Skeleton>
-                            </List.Item>
-                        }
+                        renderItem={listItem}
                     />
                 </Col>
                 <Col flex="auto">
@@ -75,18 +53,7 @@ const DailyOrder = () => {
                         bordered
                         itemLayout="horizontal"
                         dataSource={users.filter(u => u.hasTalked)}
-                        renderItem={item =>
-                            <List.Item
-                                actions={[<Checkbox onChange={() => toggleUser(item)} checked={item.hasTalked} />]}
-                            >
-                                <Skeleton avatar title={false} loading={false} active>
-                                    <List.Item.Meta
-                                        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                                        title={<a href="https://ant.design">{item.name}</a>}
-                                    />
-                                </Skeleton>
-                            </List.Item>
-                        }
+                        renderItem={listItem}
                     />
                 </Col>
             </Row>

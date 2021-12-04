@@ -1,5 +1,6 @@
 export default interface Person {
     id: number;
     name: string;
-    hasTalked: boolean;
+    picture: string;
+    hasTalked?: boolean;
 }

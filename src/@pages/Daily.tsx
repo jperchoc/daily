@@ -1,53 +1,42 @@
 import { Col, Row } from "antd";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Editor from "../@ccomponents/Editor";
 import Calendar from "react-calendar";
 import DailyOrder from "../@ccomponents/DailyOrder";
 import Daily from "../@model/Daily";
-import { setDateOnly } from '../@tools/utils';
+import Api from '../@api/api';
 
 const DailyPage = () => {
-  const [daily, setDaily] = useState<Daily>({
-    id: -1,
-    date: setDateOnly(new Date()),
-    content: ''
-  });
+  const [daily, setDaily] = useState<Daily>(new Daily(-1, new Date(), ''));
 
-  const handleDateChange = async (newDate: Date) => {
-    fetch("http://localhost:3004/activities?date=" + setDateOnly(newDate))
-    .then((res) => {
-      res.json().then((dailies: Daily[]) => {
+  const handleDateChange = useCallback((newDate: Date) => {
+    const newDaily = new Daily(-1, newDate, '');
+    Api.getActivityByDate(newDaily.getDateString())
+    .then((dailies: Daily[]) => {
         if (dailies.length > 0 ) {
-          setDaily(dailies[0]);
+          setDaily(new Daily(
+            dailies[0].id!,
+            new Date(dailies[0].date),
+            dailies[0].content
+            ));
         } else {
-          fetch("http://localhost:3004/activities", {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-              date: setDateOnly(newDate),
-              content: ""
-            }),
-          })
-          .then((res) => res.json())
+          Api.postActivity(newDaily.getDateString(), "")
           .then((data) => {
-            setDaily({
-              id:data.id,
-              date: data.date,
-              content: data.content
-            });
+            setDaily(new Daily(data.id, new Date(data.date), data.content));
           });
         }
-      });
-    });
-  }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    handleDateChange(new Date());
+  }, [handleDateChange]);
 
   return (
     <>
       Suivi de Daily du {daily.date.toString()}:
-      <Row>
+      <Row style={{marginBottom: "5px"}}>
         <Col>
           <Calendar
             onChange={(newDate: Date) => handleDateChange(newDate)}
