@@ -1,4 +1,46 @@
 {
   "activities": [
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "Raphael",
+      "picture": "https://joeschmoe.io/api/v1/jack"
+    },
+    {
+      "id": 2,
+      "name": "Yannick",
+      "picture": "https://joeschmoe.io/api/v1/jean"
+    },
+    {
+      "id": 3,
+      "name": "Dimitri",
+      "picture": "https://joeschmoe.io/api/v1/jon"
+    },
+    {
+      "id": 4,
+      "name": "Julien",
+      "picture": "https://joeschmoe.io/api/v1/jerry"
+    },
+    {
+      "id": 5,
+      "name": "Bastien",
+      "picture": "https://joeschmoe.io/api/v1/james"
+    },
+    {
+      "id": 6,
+      "name": "Pierre-Henri",
+      "picture": "https://joeschmoe.io/api/v1/jana"
+    },
+    {
+      "id": 7,
+      "name": "Varun",
+      "picture": "https://joeschmoe.io/api/v1/joe"
+    },
+    {
+      "id": 8,
+      "name": "Anoop",
+      "picture": "https://joeschmoe.io/api/v1/jai"
+    }
   ]
 }

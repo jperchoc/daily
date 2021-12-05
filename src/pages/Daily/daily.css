@@ -1,0 +1,20 @@
+.link-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: contents;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .ant-list-item.clickable {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .ant-list-item.clickable:hover .ant-list-item-meta-title {
+    color: #40a9ff;
+  }
+  
+  .ant-list-item.clickable:hover {
+    background-color:#f0f2f5
+  }
